@@ -207,6 +207,8 @@ static Node *mainpositionTV (const Table *t, const TValue *key) {
       return hashboolean(t, 0);
     case LUA_VTRUE:
       return hashboolean(t, 1);
+    case LUA_VMAYBE:
+      return hashboolean(t, rand() & 1);
     case LUA_VLIGHTUSERDATA: {
       void *p = pvalue(key);
       return hashpointer(t, p);
@@ -264,7 +266,7 @@ static int equalkey (const TValue *k1, const Node *n2, int deadok) {
   }
   else {  /* equal variants */
     switch (keytt(n2)) {
-      case LUA_VNIL: case LUA_VFALSE: case LUA_VTRUE:
+      case LUA_VNIL: case LUA_VFALSE: case LUA_VTRUE: case LUA_VMAYBE:
         return 1;
       case LUA_VNUMINT:
         return (ivalue(k1) == keyival(n2));

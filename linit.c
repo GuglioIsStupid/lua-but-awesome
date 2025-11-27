@@ -20,6 +20,15 @@
 #include "lauxlib.h"
 #include "llimits.h"
 
+static int l_maybe(lua_State *L) {
+  static int initialized = 0;
+  if (!initialized) {
+      srand((unsigned int)time(NULL));
+      initialized = 1;
+  }
+  lua_pushboolean(L, rand() % 2);
+  return 1;
+}
 
 /*
 ** Standard Libraries. (Must be listed in the same ORDER of their
@@ -36,6 +45,7 @@ static const luaL_Reg stdlibs[] = {
   {LUA_STRLIBNAME, luaopen_string},
   {LUA_TABLIBNAME, luaopen_table},
   {LUA_UTF8LIBNAME, luaopen_utf8},
+  {"__maybe", l_maybe},
   {NULL, NULL}
 };
 

@@ -198,7 +198,8 @@ static void dumpConstants (DumpState *D, const Proto *f) {
         dumpString(D, tsvalue(o));
         break;
       default:
-        lua_assert(tt == LUA_VNIL || tt == LUA_VFALSE || tt == LUA_VTRUE);
+        lua_assert(tt == LUA_VNIL || tt == LUA_VFALSE || tt == LUA_VTRUE || 
+                   tt == LUA_VMAYBE);
     }
   }
 }

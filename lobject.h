@@ -249,11 +249,12 @@ typedef union {
 
 #define LUA_VFALSE	makevariant(LUA_TBOOLEAN, 0)
 #define LUA_VTRUE	makevariant(LUA_TBOOLEAN, 1)
+#define LUA_VMAYBE	makevariant(LUA_TBOOLEAN, 2)
 
 #define ttisboolean(o)		checktype((o), LUA_TBOOLEAN)
 #define ttisfalse(o)		checktag((o), LUA_VFALSE)
 #define ttistrue(o)		checktag((o), LUA_VTRUE)
-
+#define ttismaybe(o)		checktag((o), LUA_VMAYBE)
 
 #define l_isfalse(o)	(ttisfalse(o) || ttisnil(o))
 #define tagisfalse(t)	((t) == LUA_VFALSE || novariant(t) == LUA_TNIL)
@@ -262,6 +263,7 @@ typedef union {
 
 #define setbfvalue(obj)		settt_(obj, LUA_VFALSE)
 #define setbtvalue(obj)		settt_(obj, LUA_VTRUE)
+#define setbmvalue(obj)		settt_(obj, LUA_VMAYBE)
 
 /* }================================================================== */
 

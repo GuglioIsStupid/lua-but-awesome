@@ -222,6 +222,9 @@ static void loadConstants (LoadState *S, Proto *f) {
       case LUA_VTRUE:
         setbtvalue(o);
         break;
+      case LUA_VMAYBE:
+        setbmvalue(o);
+        break;
       case LUA_VNUMFLT:
         setfltvalue(o, loadNumber(S));
         break;

@@ -1252,9 +1252,27 @@ static void suffixedexp (LexState *ls, expdesc *v) {
   }
 }
 
+#ifndef rand
+#include <stdlib.h>
+#include <time.h>
+int rand_initialized = 0;
+#endif
+
+static int __maybe_random_choice(void) {
+    static unsigned int state;
+    static int initialized = 0;
+
+    if (!initialized) {
+      state = (unsigned int)time(NULL);  
+      initialized = 1;
+    }
+
+    state = state * 1664525 + 1013904223;
+    return (state >> 16) & 1;
+}
 
 static void simpleexp (LexState *ls, expdesc *v) {
-  /* simpleexp -> FLT | INT | STRING | NIL | TRUE | FALSE | ... |
+  /* simpleexp -> FLT | INT | STRING | NIL | TRUE | FALSE | <AYBE | ... |
                   constructor | FUNCTION body | suffixedexp */
   switch (ls->t.token) {
     case TK_FLT: {
@@ -1283,6 +1301,12 @@ static void simpleexp (LexState *ls, expdesc *v) {
       init_exp(v, VFALSE, 0);
       break;
     }
+    case TK_MAYBE: {
+      int b = __maybe_random_choice();  // 0 or 1
+      init_exp(v, b ? VTRUE : VFALSE, 0);
+      break;
+    }
+
     case TK_DOTS: {  /* vararg */
       FuncState *fs = ls->fs;
       check_condition(ls, fs->f->flag & PF_ISVARARG,
