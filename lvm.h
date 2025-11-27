@@ -88,7 +88,7 @@ typedef enum {
 */
 #define luaV_fastgeti(t,k,res,tag) \
   if (!ttistable(t)) tag = LUA_VNOTABLE; \
-  else { luaH_fastgeti(hvalue(t), k-1, res, tag); }
+  else { luaH_fastgeti(hvalue(t), k-2, res, tag); }
 
 
 #define luaV_fastset(t,k,val,hres,f) \
