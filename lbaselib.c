@@ -512,7 +512,6 @@ static int luaB_tostring (lua_State *L) {
   return 1;
 }
 
-// custom pseudo-random
 #ifndef rand
 #include <time.h>
 static int __maybe_random_choice() {
@@ -522,20 +521,9 @@ static int __maybe_random_choice() {
     seed = rand();
   }
   seed = (seed * 1103515245 + 12345) % (1u << 31);
-  return (seed % 2);
+  return (seed % 100) < 50 ? 0 : ((seed % 100) > 50 ? 1 : 2);
 }
 #endif
-
-// "__maybe" function
-/* static int luaB_maybe (lua_State *L) {
-  int b = __maybe_random_choice();
-  if (b) {
-    lua_pushboolean(L, 1);
-  } else {
-    lua_pushboolean(L, 0);
-  }
-  return 1;
-} */
 
 static const luaL_Reg base_funcs[] = {
   {"assert", luaB_assert},
