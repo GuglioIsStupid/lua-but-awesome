@@ -611,7 +611,7 @@ int luaV_equalobj (lua_State *L, const TValue *t1, const TValue *t2) {
   }
   else {  /* equal variants */
     switch (ttypetag(t1)) {
-      case LUA_VNIL: case LUA_VFALSE: case LUA_VTRUE: case LUA_VMAYBE:
+      case LUA_VNIL: case LUA_VFALSE: case LUA_VTRUE: /* case LUA_VMAYBE: */
         return 1;
       case LUA_VNUMINT:
         return (ivalue(t1) == ivalue(t2));
@@ -1276,11 +1276,11 @@ void luaV_execute (lua_State *L, CallInfo *ci) {
         setbtvalue(s2v(ra));
         vmbreak;
       }
-      vmcase(OP_LOADMAYBE) {
+      /* vmcase(OP_LOADMAYBE) {
         StkId ra = RA(i);
         setbmvalue(s2v(ra));
         vmbreak;
-      }
+      } */
       vmcase(OP_LOADNIL) {
         StkId ra = RA(i);
         int b = GETARG_B(i);

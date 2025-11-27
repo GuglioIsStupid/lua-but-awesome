@@ -343,8 +343,8 @@ void lua_printvalue (TValue *v) {
       printf("%s", "false"); break;
     case LUA_VTRUE:
       printf("%s", "true"); break;
-    case LUA_VMAYBE:
-      printf("%s", "maybe"); break;
+    /* case LUA_VMAYBE:
+      printf("%s", "maybe"); break; */
     case LUA_VLIGHTUSERDATA:
       printf("light udata: %p", pvalue(v)); break;
     case LUA_VUSERDATA:

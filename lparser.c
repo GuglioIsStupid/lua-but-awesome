@@ -1252,7 +1252,7 @@ static void suffixedexp (LexState *ls, expdesc *v) {
   }
 }
 
-#ifndef rand
+/* #ifndef rand
 #include <stdlib.h>
 #include <time.h>
 int rand_initialized = 0;
@@ -1269,7 +1269,7 @@ static int __maybe_random_choice(void) {
 
     state = state * 1664525 + 1013904223;
     return (state >> 16) & 1;
-}
+} */
 
 static void simpleexp (LexState *ls, expdesc *v) {
   /* simpleexp -> FLT | INT | STRING | NIL | TRUE | FALSE | <AYBE | ... |
@@ -1301,12 +1301,23 @@ static void simpleexp (LexState *ls, expdesc *v) {
       init_exp(v, VFALSE, 0);
       break;
     }
-    case TK_MAYBE: {
-      int b = __maybe_random_choice();  // 0 or 1
-      init_exp(v, b ? VTRUE : VFALSE, 0);
-      break;
-    }
+    /* case TK_MAYBE: {
+      expdesc func;
+      TString *maybeName = luaX_newstring(ls, "maybe", sizeof("maybe") - 1);
 
+      singlevaraux(ls, maybeName, &func, 1);
+
+      luaK_exp2nextreg(ls->fs, &func);
+      int reg = func.u.info;
+
+      init_exp(v, VCALL,
+              luaK_codeABC(ls->fs, OP_CALL,
+                            reg,
+                            1,
+                            2));
+
+      break;
+    } */
     case TK_DOTS: {  /* vararg */
       FuncState *fs = ls->fs;
       check_condition(ls, fs->f->flag & PF_ISVARARG,

@@ -28,7 +28,7 @@ typedef enum {
   VNIL,  /* constant nil */
   VTRUE,  /* constant true */
   VFALSE,  /* constant false */
-  VMAYBE,  /* constant maybe (True / False randomly) */
+  /* VMAYBE, */  /* constant maybe (True / False randomly) */
   VK,  /* constant in 'k'; info = index of constant in 'k' */
   VKFLT,  /* floating constant; nval = numerical float value */
   VKINT,  /* integer constant; ival = numerical integer value */

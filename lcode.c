@@ -92,9 +92,9 @@ int luaK_exp2const (FuncState *fs, const expdesc *e, TValue *v) {
     case VTRUE:
       setbtvalue(v);
       return 1;
-    case VMAYBE:
+    /* case VMAYBE:
       setbtvalue(v);
-      return 1;
+      return 1; */
     case VNIL:
       setnilvalue(v);
       return 1;
@@ -747,9 +747,9 @@ static void const2exp (TValue *v, expdesc *e) {
     case LUA_VTRUE:
       e->k = VTRUE;
       break;
-    case LUA_VMAYBE:
+    /* case LUA_VMAYBE:
       e->k = VMAYBE;
-      break;
+      break; */
     case LUA_VNIL:
       e->k = VNIL;
       break;
@@ -905,10 +905,10 @@ static void discharge2reg (FuncState *fs, expdesc *e, int reg) {
       luaK_codeABC(fs, OP_LOADTRUE, reg, 0, 0);
       break;
     }
-    case VMAYBE: {
+    /* case VMAYBE: {
       luaK_codeABC(fs, OP_LOADMAYBE, reg, 0, 0);
       break;
-    }
+    } */
     case VKSTR: {
       str2K(fs, e);
     }  /* FALLTHROUGH */
@@ -1073,7 +1073,7 @@ static int luaK_exp2K (FuncState *fs, expdesc *e) {
     switch (e->k) {  /* move constants to 'k' */
       case VTRUE: info = boolT(fs); break;
       case VFALSE: info = boolF(fs); break;
-      case VMAYBE: info = boolM(fs); break;
+      /* case VMAYBE: info = boolM(fs); break; */
       case VNIL: info = nilK(fs); break;
       case VKINT: info = luaK_intK(fs, e->u.ival); break;
       case VKFLT: info = luaK_numberK(fs, e->u.nval); break;
@@ -1254,10 +1254,10 @@ static void codenot (FuncState *fs, expdesc *e) {
       e->k = VFALSE;  /* false == not "x" == not 0.5 == not 1 == not true */
       break;
     }
-    case VMAYBE: {
-      e->k = VMAYBE;  /* maybe stays maybe */
+    /* case VMAYBE: {
+      e->k = VMAYBE;
       break;
-    }
+    } */
     case VJMP: {
       negatecondition(fs, e);
       break;

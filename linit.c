@@ -20,13 +20,21 @@
 #include "lauxlib.h"
 #include "llimits.h"
 
+#include <time.h>
+
+static int __maybe_random_choice() {
+  static unsigned int seed = 0;
+  seed = (seed * 1103515245 + 12345) % (1u << 31);
+  return (seed % 2);
+}
+
 static int l_maybe(lua_State *L) {
   static int initialized = 0;
   if (!initialized) {
       srand((unsigned int)time(NULL));
       initialized = 1;
   }
-  lua_pushboolean(L, rand() % 2);
+  lua_pushboolean(L, __maybe_random_choice());
   return 1;
 }
 
@@ -45,7 +53,7 @@ static const luaL_Reg stdlibs[] = {
   {LUA_STRLIBNAME, luaopen_string},
   {LUA_TABLIBNAME, luaopen_table},
   {LUA_UTF8LIBNAME, luaopen_utf8},
-  {"__maybe", l_maybe},
+  /* {"maybe", l_maybe}, */
   {NULL, NULL}
 };
 

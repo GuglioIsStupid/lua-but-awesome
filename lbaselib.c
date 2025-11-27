@@ -512,6 +512,31 @@ static int luaB_tostring (lua_State *L) {
   return 1;
 }
 
+// custom pseudo-random
+#ifndef rand
+#include <time.h>
+static int __maybe_random_choice() {
+  static unsigned int seed = 0;
+  if (seed == 0) {
+    srand((unsigned int)time(NULL));
+    seed = rand();
+  }
+  seed = (seed * 1103515245 + 12345) % (1u << 31);
+  return (seed % 2);
+}
+#endif
+
+// "__maybe" function
+/* static int luaB_maybe (lua_State *L) {
+  int b = __maybe_random_choice();
+  if (b) {
+    lua_pushboolean(L, 1);
+  } else {
+    lua_pushboolean(L, 0);
+  }
+  return 1;
+} */
+
 static const luaL_Reg base_funcs[] = {
   {"assert", luaB_assert},
   {"collectgarbage", luaB_collectgarbage},
@@ -536,23 +561,42 @@ static const luaL_Reg base_funcs[] = {
   {"tostring", luaB_tostring},
   {"type", luaB_type},
   {"xpcall", luaB_xpcall},
-  /* placeholders */
   {LUA_GNAME, NULL},
   {"_VERSION", NULL},
   {NULL, NULL}
 };
 
+static int luaB_maybe_index(lua_State *L) {
+  const char *key = lua_tostring(L, 2);
+  if (key && strcmp(key, "maybe") == 0) {
+      int b = __maybe_random_choice();
+      lua_pushboolean(L, b);
+      return 1;
+  }
+  return 0;
+}
 
 LUAMOD_API int luaopen_base (lua_State *L) {
-  /* open lib into global table */
   lua_pushglobaltable(L);
   luaL_setfuncs(L, base_funcs, 0);
-  /* set global _G */
+
   lua_pushvalue(L, -1);
   lua_setfield(L, -2, LUA_GNAME);
-  /* set global _VERSION */
+
   lua_pushliteral(L, LUA_VERSION);
   lua_setfield(L, -2, "_VERSION");
+
+  lua_pushglobaltable(L);
+
+  lua_newtable(L);
+
+  lua_pushcfunction(L, luaB_maybe_index);
+  lua_setfield(L, -2, "__index");
+
+  lua_setmetatable(L, -2);
+
+  lua_pop(L, 1);
+
   return 1;
 }
 
